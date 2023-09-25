@@ -17,19 +17,7 @@ export default function App() {
       <BlogProvider>
         <NavigationContainer>
           <Stack.Navigator>
-            <Stack.Screen
-              name="Home"
-              component={IndexScreen}
-              options={({ navigation }) => ({
-                headerRight: () => (
-                  <TouchableOpacity
-                    onPress={() => navigation.navigate("Create")}
-                  >
-                    <Feather name="plus" size={30} />
-                  </TouchableOpacity>
-                ),
-              })}
-            />
+            <Stack.Screen name="Home" component={IndexScreen} />
             <Stack.Screen name="Show" component={ShowScreen} />
             <Stack.Screen name="Create" component={CreateScreen} />
           </Stack.Navigator>

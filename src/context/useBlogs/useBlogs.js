@@ -14,7 +14,11 @@ const blogReducer = (state, action) => {
         ...state,
         blogs: [
           ...state.blogs,
-          { title: action.payload.title, id: action.payload.id },
+          {
+            title: action.payload.title,
+            content: action.payload.content,
+            id: action.payload.id,
+          },
         ],
       };
     case "deleteBlog":
@@ -25,6 +29,19 @@ const blogReducer = (state, action) => {
         ...state,
         blogs: filteredBlogs,
       };
+    case "editBlog":
+      return {
+        ...state,
+        blogs: state.blogs.map((blog) =>
+          blog.id === action.payload.id
+            ? {
+                ...blog,
+                title: action.payload.title,
+                content: action.payload.content,
+              }
+            : blog
+        ),
+      };
     default:
       return state;
   }
@@ -32,11 +49,12 @@ const blogReducer = (state, action) => {
 
 const useBlogs = () => {
   const [blogState, blogDispatch] = useReducer(blogReducer, INITIAL_STATE);
-  const addBlog = (title) => {
+  const addBlog = (title, content) => {
     return blogDispatch({
       type: "addBlog",
       payload: {
-        title: `Blog ${blogState.blogs.length + 1}`,
+        title: title,
+        content: content,
         id: Math.round(Math.random() * 999, 0),
       },
     });
@@ -45,7 +63,14 @@ const useBlogs = () => {
   const deleteBlog = (id) => {
     return blogDispatch({ type: "deleteBlog", payload: id });
   };
-  return { blogState, addBlog, deleteBlog };
+
+  const editBlog = (id, title, content) => {
+    return blogDispatch({
+      type: "editBlog",
+      payload: { id, title, content },
+    });
+  };
+  return { blogState, addBlog, deleteBlog, editBlog };
 };
 
 export default useBlogs;

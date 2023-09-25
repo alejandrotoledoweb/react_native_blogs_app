@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import {
   Button,
   FlatList,
@@ -9,14 +9,26 @@ import {
 } from "react-native";
 import BlogContext from "../context/BlogContext";
 import { Feather } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
-const IndexScreen = ({ navigation }) => {
+const IndexScreen = () => {
   const { blogState, addBlog, deleteBlog } = useContext(BlogContext);
+
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={() => navigation.navigate("Create")}>
+          <Feather name="plus" size={30} />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
+
   return (
     <View>
       <Text>Index Screen</Text>
-      {/* <Button onPress={() => navigation.navigate("Create")} title="Create" /> */}
-      <Button onPress={() => addBlog()} title="Add blog" />
       <FlatList
         data={blogState.blogs}
         renderItem={({ item }) => {
@@ -26,7 +38,7 @@ const IndexScreen = ({ navigation }) => {
                 onPress={() => navigation.navigate("Show", { id: item.id })}
               >
                 <Text style={styles.title}>
-                  {item.title} - {item.id}
+                  {item.title}-{item.content} - {item.id}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
